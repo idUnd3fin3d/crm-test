@@ -9,7 +9,7 @@
 ### 1. База данных (Supabase)
 
 1. Создайте проект на [supabase.com](https://supabase.com) (бесплатного тарифа достаточно).
-2. Отключите открытую регистрацию: Authentication → Sign In / Providers → Email → выключите **Allow new users to sign up**.
+2. Отключите открытую регистрацию: Authentication → Sign In / Providers → выключите **Allow new users to sign up**.
 3. Примените миграции из `supabase/migrations/` по порядку (по именам файлов):
    - через SQL Editor: вставьте и выполните каждый файл по очереди;
    - или через CLI: `supabase link --project-ref <ref>` и `supabase db push`.
@@ -17,6 +17,18 @@
    `manager1@example.com`, `manager2@example.com`, `executor1@example.com`, `executor2@example.com`.
    Пароли задайте свои.
 5. Выполните `supabase/seed.sql` в SQL Editor **один раз целиком**. Он создаёт профили с ролями, 3 объекта и 7 задач в разных статусах с историей.
+
+### Вместо облака: локальный Supabase (по желанию)
+
+Нужны Docker и [Supabase CLI](https://supabase.com/docs/guides/local-development).
+
+```bash
+supabase start    # поднимет локальный стек и покажет URL и ключи (их можно снова вывести: supabase status)
+```
+
+1. `supabase db reset` применит миграции с нуля. Эта команда пересоздаёт базу, пользователи тоже удаляются.
+2. Создайте 4 пользователей в локальном Studio (http://127.0.0.1:54323 → Authentication → Users), затем выполните `supabase/seed.sql` в его SQL Editor.
+3. В `.env` укажите `VITE_SUPABASE_URL=http://127.0.0.1:54321` и публичный ключ из `supabase status`.
 
 ### 2. Фронтенд
 
@@ -68,3 +80,11 @@ src/lib/               клиент Supabase, типы, вспомогатель
 src/components/        формы и общие элементы
 src/pages/             экраны: вход, объекты, объект, задача, мои задачи
 ```
+
+## Решения и допущения
+
+Что решено самостоятельно там, где ТЗ неоднозначно, и что не сделано: [docs/decisions.md](docs/decisions.md).
+
+## Объяснение для руководителя
+
+Как устроена система, как защищены данные и что не может сделать исполнитель, простым языком и без терминов: [docs/explanation.md](docs/explanation.md).
