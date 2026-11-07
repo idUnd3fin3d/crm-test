@@ -41,6 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!uid) return;
 
+    setLoading(true);
+
     supabase.from('profiles').select('*').eq('id', uid).single()
       .then(({ data }) => {
         setProfile(data as Profile | null);
